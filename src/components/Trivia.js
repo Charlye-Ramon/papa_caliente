@@ -111,7 +111,7 @@ export default function Trivia() {
                 </>
               ) : (
                 <>
-                  <span className={styles.resultEmoji}>😬</span>
+                  <span className={styles.resultEmoji}>❌</span>
                   <div>
                     <p className={styles.resultTitle}>¡Incorrecto!</p>
                     <p className={styles.resultSub}>La correcta era <strong>{question.correct}</strong>: {question.options[question.correct]}</p>
