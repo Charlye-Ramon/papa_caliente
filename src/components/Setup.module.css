@@ -195,3 +195,70 @@
 @media (max-width: 520px) {
   .optionsGrid { grid-template-columns: 1fr; }
 }
+
+/* ── Atajo de cantidad ─────────────────────────────────────── */
+.quickCount {
+  background: var(--white);
+  border: 2px solid var(--sand);
+  border-radius: var(--radius-lg);
+  padding: 20px 24px;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.quickCountLabel {
+  font-family: 'Fraunces', serif;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--espresso);
+}
+
+.quickCountRow {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.countInput {
+  width: 90px;
+  border: 1.5px solid var(--sand);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: var(--espresso);
+  background: var(--cream);
+  text-align: center;
+  transition: border-color 0.2s;
+  /* oculta las flechitas del input number */
+  appearance: textfield;
+  -moz-appearance: textfield;
+}
+.countInput::-webkit-inner-spin-button,
+.countInput::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+.countInput:focus {
+  outline: none;
+  border-color: var(--camel);
+}
+
+.countBtn {
+  background: var(--espresso);
+  color: var(--cream);
+  border-radius: var(--radius-xl);
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  transition: background 0.2s;
+}
+.countBtn:hover { background: var(--bark); }
+
+.quickCountHint {
+  font-size: 0.78rem;
+  color: var(--camel);
+}
+.quickCountHint strong {
+  color: var(--bark);
+}

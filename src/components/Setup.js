@@ -5,33 +5,49 @@ import styles from './Setup.module.css';
 
 const CORRECT_OPTIONS = ['A', 'B', 'C', 'D'];
 
-function emptyQuestion(id) {
-  return { id, text: '', options: { A: '', B: '', C: '', D: '' }, correct: 'A' };
+function emptyQuestion() {
+  return { id: Date.now() + Math.random(), text: '', options: { A: '', B: '', C: '', D: '' }, correct: 'A' };
 }
 
 export default function Setup() {
   const { dispatch } = useGame();
   const [questions, setQuestions] = useState(
-    Array.from({ length: 10 }, (_, i) => emptyQuestion(i + 1))
+    Array.from({ length: 10 }, () => emptyQuestion())
   );
   const [error, setError] = useState('');
+  const [countInput, setCountInput] = useState('');
 
+  // ── Atajo: genera N tarjetas de golpe ──────────────────────────────────────
+  function applyCount() {
+    const n = parseInt(countInput, 10);
+    if (!n || n < 1 || n > 60) return;
+    setQuestions(prev => {
+      if (n > prev.length) {
+        const extras = Array.from({ length: n - prev.length }, () => emptyQuestion());
+        return [...prev, ...extras];
+      }
+      return prev.slice(0, n);
+    });
+    setCountInput('');
+  }
+
+  function handleCountKey(e) {
+    if (e.key === 'Enter') applyCount();
+  }
+
+  // ── CRUD de preguntas ──────────────────────────────────────────────────────
   function updateQuestion(id, field, value) {
-    setQuestions(qs =>
-      qs.map(q => q.id === id ? { ...q, [field]: value } : q)
-    );
+    setQuestions(qs => qs.map(q => q.id === id ? { ...q, [field]: value } : q));
   }
 
   function updateOption(id, letter, value) {
     setQuestions(qs =>
-      qs.map(q =>
-        q.id === id ? { ...q, options: { ...q.options, [letter]: value } } : q
-      )
+      qs.map(q => q.id === id ? { ...q, options: { ...q.options, [letter]: value } } : q)
     );
   }
 
   function addQuestion() {
-    setQuestions(qs => [...qs, emptyQuestion(Date.now())]);
+    setQuestions(qs => [...qs, emptyQuestion()]);
   }
 
   function removeQuestion(id) {
@@ -44,7 +60,7 @@ export default function Setup() {
       if (!q.text.trim()) { setError('Todas las preguntas deben tener texto.'); return; }
       for (const letter of CORRECT_OPTIONS) {
         if (!q.options[letter].trim()) {
-          setError(`La pregunta "${q.text.slice(0, 30)}..." tiene opciones vacías.`);
+          setError(`La pregunta "${q.text.slice(0, 30)}…" tiene opciones vacías.`);
           return;
         }
       }
@@ -66,6 +82,40 @@ export default function Setup() {
         <p className={styles.sub}>Configura las preguntas antes de empezar</p>
       </motion.div>
 
+      {/* ── ATAJO DE CANTIDAD ─────────────────────────────────────── */}
+      <motion.div
+        className={styles.quickCount}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2, duration: 0.5 }}
+      >
+        <span className={styles.quickCountLabel}>¿Cuántas preguntas necesitas?</span>
+        <div className={styles.quickCountRow}>
+          <input
+            className={styles.countInput}
+            type="number"
+            min="1"
+            max="60"
+            placeholder={questions.length}
+            value={countInput}
+            onChange={e => setCountInput(e.target.value)}
+            onKeyDown={handleCountKey}
+          />
+          <motion.button
+            className={styles.countBtn}
+            onClick={applyCount}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Generar tarjetas
+          </motion.button>
+        </div>
+        <p className={styles.quickCountHint}>
+          Actualmente: <strong>{questions.length}</strong> tarjeta{questions.length !== 1 ? 's' : ''} · Escribe un número y presiona Enter o el botón
+        </p>
+      </motion.div>
+
+      {/* ── LISTA DE PREGUNTAS ────────────────────────────────────── */}
       <div className={styles.list}>
         <AnimatePresence>
           {questions.map((q, idx) => (
@@ -75,7 +125,7 @@ export default function Setup() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.92 }}
-              transition={{ duration: 0.3, delay: idx * 0.04 }}
+              transition={{ duration: 0.3, delay: Math.min(idx * 0.03, 0.3) }}
               layout
             >
               <div className={styles.cardHeader}>
@@ -118,14 +168,13 @@ export default function Setup() {
                   </div>
                 ))}
               </div>
-              <p className={styles.correctHint}>
-                ✓ Marca el radio de la opción correcta
-              </p>
+              <p className={styles.correctHint}>✓ Marca el radio de la opción correcta</p>
             </motion.div>
           ))}
         </AnimatePresence>
       </div>
 
+      {/* ── ACCIONES ─────────────────────────────────────────────── */}
       <div className={styles.actions}>
         <motion.button
           className={styles.addBtn}
