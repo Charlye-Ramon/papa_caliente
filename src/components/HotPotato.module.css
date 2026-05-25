@@ -1,0 +1,163 @@
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 32px 24px 60px;
+  position: relative;
+}
+
+.progressBar {
+  width: 100%;
+  max-width: 500px;
+  height: 6px;
+  background: var(--sand);
+  border-radius: 99px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progressFill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--camel), var(--bark));
+  border-radius: 99px;
+  transition: width 0.6s ease;
+}
+
+.progressLabel {
+  font-size: 0.8rem;
+  color: var(--camel);
+  margin-bottom: 32px;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.header h1 {
+  font-size: clamp(2.2rem, 6vw, 3.8rem);
+  color: var(--espresso);
+}
+
+.accent { color: var(--bark); }
+
+.center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  flex: 1;
+  justify-content: center;
+}
+
+.bigPotato {
+  font-size: clamp(5rem, 18vw, 10rem);
+  line-height: 1;
+  filter: drop-shadow(0 12px 24px rgba(74,47,26,0.18));
+  display: block;
+}
+
+.startBtn {
+  background: var(--espresso);
+  color: var(--cream);
+  border-radius: var(--radius-xl);
+  padding: 20px 60px;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 10px 30px rgba(74,47,26,0.25);
+  transition: background 0.2s;
+}
+.startBtn:hover { background: var(--bark); }
+
+.altBtn {
+  background: none;
+  color: var(--camel);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  transition: color 0.2s;
+}
+.altBtn:hover { color: var(--bark); }
+
+.playingText {
+  font-family: 'Fraunces', serif;
+  font-size: clamp(1.4rem, 4vw, 2rem);
+  color: var(--bark);
+  font-weight: 600;
+}
+
+.flames {
+  font-size: 2.4rem;
+  letter-spacing: 6px;
+  animation: flicker 0.4s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  from { opacity: 0.7; transform: scale(0.97); }
+  to   { opacity: 1;   transform: scale(1.04); }
+}
+
+/* ── Burned ── */
+.burnedWrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  text-align: center;
+  background: radial-gradient(ellipse at center, #fff3e0 0%, var(--cream) 70%);
+  padding: 40px 24px;
+  border-radius: var(--radius-xl);
+  width: 100%;
+  max-width: 560px;
+}
+
+.burnedEmoji {
+  font-size: clamp(5rem, 18vw, 9rem);
+  filter: drop-shadow(0 0 24px rgba(255,120,0,0.35));
+}
+
+.burnedTitle {
+  font-size: clamp(2.2rem, 7vw, 3.8rem);
+  color: var(--espresso);
+  text-shadow: 2px 2px 0px var(--sand);
+}
+
+.burnedSub {
+  font-size: 1rem;
+  color: var(--bark);
+  max-width: 340px;
+  line-height: 1.5;
+}
+
+.primaryBtn {
+  background: var(--espresso);
+  color: var(--cream);
+  border-radius: var(--radius-xl);
+  padding: 18px 48px;
+  font-size: 1.05rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  box-shadow: 0 8px 24px rgba(74,47,26,0.25);
+  transition: background 0.2s;
+  margin-top: 8px;
+}
+.primaryBtn:hover { background: var(--bark); }
+
+.finishBox {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  text-align: center;
+  padding: 48px;
+}
+.finishBox h2 {
+  font-size: 2rem;
+  color: var(--espresso);
+}
+.finishBox p { color: var(--bark); }
