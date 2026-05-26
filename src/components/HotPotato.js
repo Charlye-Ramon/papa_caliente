@@ -4,16 +4,18 @@ import { useGame } from '../context/GameContext';
 import { useAudio } from '../hooks/useAudio';
 import styles from './HotPotato.module.css';
 
-// Random time between 10 and 80 seconds (ms)
+const MIN_MS = 10000;  // 10 segundos mínimo
+const MAX_MS = 30000;  // 30 segundos máximo
+
 function randomMs() {
-  return (Math.floor(Math.random() * 41) + 10) * 1000;
+  return Math.floor(Math.random() * (MAX_MS - MIN_MS + 1)) + MIN_MS;
 }
 
 export default function HotPotato() {
   const { state, dispatch } = useGame();
-  const { play, stop } = useAudio('/music.mp3');
+  const { play, stop } = useAudio();
 
-  const [phase, setPhase] = useState('idle');  // 'idle' | 'playing' | 'burned'
+  const [phase, setPhase] = useState('idle'); // 'idle' | 'playing' | 'burned'
   const timerRef = useRef(null);
 
   const remaining = state.questions.filter(q => !state.usedQuestions.includes(q.id));
@@ -66,7 +68,8 @@ export default function HotPotato() {
 
   return (
     <div className={styles.page}>
-      {/* Progress bar */}
+
+      {/* ── Barra de progreso ── */}
       <div className={styles.progressBar}>
         <div
           className={styles.progressFill}
@@ -88,6 +91,7 @@ export default function HotPotato() {
       </motion.div>
 
       <AnimatePresence mode="wait">
+
         {/* ── IDLE ── */}
         {phase === 'idle' && (
           <motion.div
@@ -194,6 +198,7 @@ export default function HotPotato() {
             </motion.button>
           </motion.div>
         )}
+
       </AnimatePresence>
     </div>
   );

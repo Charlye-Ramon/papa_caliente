@@ -1,37 +1,39 @@
-import { useRef, useCallback } from 'react';
-
 /**
- * useAudio — hook para manejar la música de fondo de la Papa Caliente.
+ * useAudio — instancia GLOBAL del audio, vive fuera de React.
+ * Al estar fuera del árbol de componentes, nunca se destruye
+ * aunque HotPotato se desmonte al cambiar de pantalla.
  *
- * Para agregar tu archivo MP3:
- *   1. Copia tu archivo a /public/music.mp3
- *   2. El hook lo cargará automáticamente desde esa ruta.
+ * play()  → reanuda exactamente donde se pausó
+ * stop()  → pausa y conserva la posición
+ * loop: true → al llegar al final retoma desde el inicio
  *
- * Si no hay archivo, las llamadas a play/stop son silenciosas (no hay error).
+ * Coloca tu archivo en /public/music.mp3
  */
-export function useAudio(src = '/music.mp3') {
-  const audioRef = useRef(null);
 
-  const play = useCallback(() => {
-    if (!audioRef.current) {
-      audioRef.current = new Audio(src);
-      audioRef.current.loop = true;
-    }
-    audioRef.current.currentTime = 0;
-    audioRef.current.play().catch(() => {
-      // El navegador puede bloquear audio sin interacción del usuario.
-      // El primer clic en "Iniciar Papa Caliente" cuenta como interacción,
-      // así que normalmente esto funcionará bien.
-      console.warn('[useAudio] No se pudo reproducir el audio. Asegúrate de que /public/music.mp3 existe.');
-    });
-  }, [src]);
+// Objeto Audio único para toda la sesión
+let _audio = null;
 
-  const stop = useCallback(() => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current.currentTime = 0;
-    }
-  }, []);
+function getAudio() {
+  if (!_audio) {
+    _audio = new Audio('/music.mp3');
+    _audio.loop = true;
+  }
+  return _audio;
+}
+
+export function useAudio() {
+  function play() {
+    const audio = getAudio();
+    audio.play().catch(() =>
+      console.warn('[useAudio] No se pudo reproducir. ¿Existe /public/music.mp3?')
+    );
+  }
+
+  function stop() {
+    const audio = getAudio();
+    audio.pause();
+    // NO tocamos currentTime → la posición queda guardada para la próxima ronda
+  }
 
   return { play, stop };
 }
